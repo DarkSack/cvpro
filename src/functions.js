@@ -4,19 +4,21 @@ import Swal from "sweetalert2";
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 async function chatCompletion(prompt, type) {
-  const apiUrl = "https://dndback.vercel.app";
-  const response = await fetch(`${apiUrl}/extras/inproveField`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const response = await fetch(
+    "https://dndback.vercel.app/extras/improveField",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      mode: "cors",
+      credentials: "same-origin",
+      body: JSON.stringify({
+        prompt,
+        type,
+      }),
     },
-    mode: "cors",
-    credentials: "same-origin",
-    body: JSON.stringify({
-      prompt,
-      type,
-    }),
-  });
+  );
   if (!response.ok) {
     throw new Error(`Error: ${response.status}`);
   }
