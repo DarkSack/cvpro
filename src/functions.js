@@ -8,7 +8,9 @@ async function chatCompletion(prompt, type) {
     import.meta.env.ENV === "development"
       ? import.meta.env.VITE_LOCAL_API
       : import.meta.env.VITE_API_URL;
-  const response = await fetch(apiUrl + "extras/inproveField", {
+      console.log(apiUrl);
+      
+  const response = await fetch(`${apiUrl}/extras/inproveField`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
