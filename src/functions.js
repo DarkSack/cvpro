@@ -4,12 +4,7 @@ import Swal from "sweetalert2";
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 async function chatCompletion(prompt, type) {
-  const apiUrl =
-    import.meta.env.ENV === "development"
-      ? import.meta.env.VITE_LOCAL_API
-      : import.meta.env.VITE_API_URL;
-      console.log(apiUrl);
-      
+  const apiUrl = "https://dndback.vercel.app";
   const response = await fetch(`${apiUrl}/extras/inproveField`, {
     method: "POST",
     headers: {
