@@ -317,7 +317,6 @@ const CVGenerator = () => {
 
   const downloadCV = async () => {
     try {
-      // Método 1: html2canvas + jsPDF (Recomendado)
       const previewElement = document.getElementById("cv-preview");
       if (!previewElement) {
         const props = {
@@ -328,66 +327,42 @@ const CVGenerator = () => {
         RenderAlert(props);
         return;
       }
-      // Crear canvas del CV
+
+      // Crear canvas con configuración optimizada
       const canvas = await html2canvas(previewElement, {
-        scale: 2, // Mayor calidad
+        scale: 2,
         useCORS: true,
         backgroundColor: "#ffffff",
+        width: previewElement.scrollWidth,
+        height: previewElement.scrollHeight,
       });
 
       const imgData = canvas.toDataURL("image/png");
-      // Crear PDF con las dimensiones correctas
+
+      // PDF sin márgenes
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
         format: "a4",
       });
 
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
+      // Dimensiones A4 completas
+      const pageWidth = 210;
+      const pageHeight = 297;
+
+      // Calcular dimensiones proporcionales
       const imgWidth = pageWidth;
       const imgHeight = (canvas.height * pageWidth) / canvas.width;
-      // Si la imagen es más alta que una página, dividirla
-      if (imgHeight > pageHeight) {
-        const totalPages = Math.ceil(imgHeight / pageHeight);
-        for (let i = 0; i < totalPages; i++) {
-          if (i > 0) {
-            pdf.addPage();
-          }
-          const sourceY = i * pageHeight * (canvas.width / pageWidth);
-          const sourceHeight = Math.min(
-            pageHeight * (canvas.width / pageWidth),
-            canvas.height - sourceY,
-          );
-          // Crear canvas temporal para esta página
-          const tempCanvas = document.createElement("canvas");
-          tempCanvas.width = canvas.width;
-          tempCanvas.height = sourceHeight;
-          const tempCtx = tempCanvas.getContext("2d");
-          tempCtx.drawImage(
-            canvas,
-            0,
-            sourceY,
-            canvas.width,
-            sourceHeight,
-            0,
-            0,
-            canvas.width,
-            sourceHeight,
-          );
-          const tempImgData = tempCanvas.toDataURL("image/png");
-          pdf.addImage(
-            tempImgData,
-            "PNG",
-            0,
-            0,
-            imgWidth,
-            (sourceHeight * pageWidth) / canvas.width,
-          );
-        }
-      } else {
-        pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-      }
+
+      // Agregar imagen sin márgenes
+      pdf.addImage(
+        imgData,
+        "PNG",
+        0,
+        0,
+        imgWidth,
+        Math.min(imgHeight, pageHeight),
+      );
 
       const fileName = `CV_${formData.fullName || "MiCV"}.pdf`.replace(
         /\s+/g,
@@ -395,237 +370,14 @@ const CVGenerator = () => {
       );
       pdf.save(fileName);
     } catch (error) {
-      console.error("Error al generar PDF:", error);
-      // Fallback: Método original mejorado
-      try {
-        await downloadCVFallback();
-      } catch (fallbackError) {
-        const props = {
-          icon: "error",
-          title:
-            "❌ Error al generar el PDF. Intenta usar 'Imprimir' desde tu navegador y selecciona 'Guardar como PDF'",
-          timer: 2000,
-        };
-        RenderAlert(props);
-      }
+      console.error("Error:", error);
+      const props = {
+        icon: "error",
+        title: "❌ Error al generar PDF",
+        timer: 2000,
+      };
+      RenderAlert(props);
     }
-  };
-
-  // Método fallback mejorado
-  const downloadCVFallback = async () => {
-    const doc = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: "a4",
-    });
-
-    let yPos = 20;
-    const margin = 15;
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const contentWidth = pageWidth - margin * 2;
-
-    // Colores según la plantilla
-    const colors = {
-      modern: { primary: [59, 130, 246], secondary: [107, 114, 128] },
-      classic: { primary: [55, 65, 81], secondary: [107, 114, 128] },
-      creative: { primary: [147, 51, 234], secondary: [59, 130, 246] },
-      minimal: { primary: [17, 24, 39], secondary: [107, 114, 128] },
-      harvard: { primary: [185, 28, 28], secondary: [55, 65, 81] },
-    };
-
-    const currentColors = colors[selectedTemplate] || colors.modern;
-
-    // Helper functions
-    const addStyledText = (text, x, y, options = {}) => {
-      const {
-        fontSize = 10,
-        style = "normal",
-        color = [0, 0, 0],
-        maxWidth = contentWidth,
-      } = options;
-
-      doc.setFontSize(fontSize);
-      doc.setFont("helvetica", style);
-      doc.setTextColor(...color);
-
-      if (maxWidth && doc.getTextWidth(text) > maxWidth) {
-        const lines = doc.splitTextToSize(text, maxWidth);
-        doc.text(lines, x, y);
-        return y + lines.length * fontSize * 0.4;
-      } else {
-        doc.text(text, x, y);
-        return y + fontSize * 0.4;
-      }
-    };
-
-    const addSectionHeader = (title, y) => {
-      // Línea decorativa para la sección
-      doc.setDrawColor(...currentColors.primary);
-      doc.setLineWidth(0.8);
-      doc.line(margin, y - 2, margin + 30, y - 2);
-
-      return addStyledText(title, margin, y, {
-        fontSize: 14,
-        style: "bold",
-        color: currentColors.primary,
-      });
-    };
-
-    const checkPageBreak = (requiredSpace) => {
-      if (yPos + requiredSpace > doc.internal.pageSize.getHeight() - margin) {
-        doc.addPage();
-        yPos = 20;
-      }
-    };
-
-    // Header personalizado según plantilla
-    if (selectedTemplate === "harvard") {
-      // Harvard style header
-      doc.setDrawColor(...currentColors.primary);
-      doc.setLineWidth(2);
-      doc.line(margin, yPos - 5, pageWidth - margin, yPos - 5);
-
-      yPos = addStyledText(
-        formData.fullName || "YOUR NAME",
-        pageWidth / 2,
-        yPos,
-        {
-          fontSize: 18,
-          style: "bold",
-          color: currentColors.primary,
-        },
-      );
-      doc.setTextColor(...currentColors.primary);
-      doc.text(formData.fullName || "YOUR NAME", pageWidth / 2, yPos - 8, {
-        align: "center",
-      });
-
-      if (formData.title) {
-        yPos = addStyledText(formData.title, pageWidth / 2, yPos + 5, {
-          fontSize: 12,
-          color: currentColors.secondary,
-        });
-        doc.text(formData.title, pageWidth / 2, yPos - 3, { align: "center" });
-      }
-    } else {
-      // Estilo moderno para otras plantillas
-      if (selectedTemplate === "creative") {
-        // Fondo colorido para plantilla creativa
-        doc.setFillColor(147, 51, 234, 0.1);
-        doc.rect(0, 0, pageWidth, 40, "F");
-      }
-
-      yPos = addStyledText(formData.fullName || "Tu Nombre", margin, yPos, {
-        fontSize: 20,
-        style: "bold",
-        color: currentColors.primary,
-      });
-
-      if (formData.title) {
-        yPos = addStyledText(formData.title, margin, yPos + 5, {
-          fontSize: 14,
-          color: currentColors.secondary,
-        });
-      }
-    }
-
-    // Información de contacto en una línea
-    yPos += 10;
-    const contactInfo = [];
-    if (formData.email) contactInfo.push(`📧 ${formData.email}`);
-    if (formData.phone) contactInfo.push(`📱 ${formData.phone}`);
-    if (formData.location) contactInfo.push(`📍 ${formData.location}`);
-
-    if (contactInfo.length > 0) {
-      yPos = addStyledText(contactInfo.join(" | "), margin, yPos, {
-        fontSize: 9,
-        color: currentColors.secondary,
-        maxWidth: contentWidth,
-      });
-    }
-
-    yPos += 15;
-
-    // Secciones principales
-    const sections = [
-      {
-        title: "RESUMEN PROFESIONAL",
-        condition: formData.summary,
-        render: () => {
-          yPos = addStyledText(formData.summary, margin, yPos + 5, {
-            fontSize: 10,
-            maxWidth: contentWidth,
-            color: [55, 65, 81],
-          });
-        },
-      },
-      {
-        title: "EXPERIENCIA LABORAL",
-        condition: formData.experience[0].position,
-        render: () => {
-          formData.experience.forEach((exp) => {
-            if (!exp.position) return;
-
-            checkPageBreak(25);
-            yPos += 5;
-
-            // Puesto y fecha en la misma línea
-            doc.setFontSize(12);
-            doc.setFont("helvetica", "bold");
-            doc.setTextColor(...currentColors.primary);
-            doc.text(exp.position, margin, yPos);
-
-            const dateText = `${exp.startDate} - ${exp.current ? "Presente" : exp.endDate}`;
-            const dateWidth = doc.getTextWidth(dateText);
-            doc.setFontSize(9);
-            doc.setTextColor(...currentColors.secondary);
-            doc.text(dateText, pageWidth - margin - dateWidth, yPos);
-
-            yPos += 6;
-
-            if (exp.company) {
-              yPos = addStyledText(
-                `${exp.company}${exp.location ? " | " + exp.location : ""}`,
-                margin,
-                yPos,
-                {
-                  fontSize: 10,
-                  style: "italic",
-                  color: currentColors.secondary,
-                },
-              );
-            }
-
-            if (exp.description) {
-              yPos = addStyledText(exp.description, margin, yPos + 3, {
-                fontSize: 9,
-                maxWidth: contentWidth,
-                color: [75, 85, 99],
-              });
-            }
-
-            yPos += 8;
-          });
-        },
-      },
-    ];
-
-    // Renderizar secciones
-    sections.forEach((section) => {
-      if (section.condition) {
-        checkPageBreak(20);
-        yPos = addSectionHeader(section.title, yPos);
-        section.render();
-        yPos += 10;
-      }
-    });
-
-    // Descargar
-    const fileName = `CV_${formData.fullName || "MiCV"}_styled.pdf`.replace(
-      /\s+/g,
-      "_",
-    );
-    doc.save(fileName);
   };
 
   const renderStep = () => {
