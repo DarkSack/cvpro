@@ -1,89 +1,68 @@
-# 📄 cvpro
+# cvpro — Arma tu CV con IA y exórtalo en PDF
 
-Generador de **currículums profesionales** con IA. Sube tu información, deja que el modelo la refine y expórtala como **PDF listo para enviar** — todo desde el navegador.
-
-Construido con **React 19 + Vite + TailwindCSS**, con integración a **Groq** para la generación de texto y **@react-pdf/renderer** + **jsPDF** para la exportación.
+Herramienta web que te lleva **paso a paso** por la construcción de un currículum: datos personales → experiencia → educación → habilidades → idiomas → certificaciones. Escribe redacciones "a lo bruto" y **una IA (Groq) las pule** al lenguaje profesional que espera un reclutador; además puedes **subir un CV en PDF existente** y cvpro extrae su texto para que arranques desde ahí. Al terminar, elige plantilla y descarga tu CV en PDF listo para enviar.
 
 ---
 
-## ✨ Características
+## Qué hace, en orden
 
-- 🤖 **Redacción asistida por IA** (Groq SDK) — genera descripciones profesionales a partir de bullets.
-- 📄 **Exportación a PDF** con `@react-pdf/renderer`, `jsPDF` y `html2canvas`.
-- 🔍 **Vista previa** en vivo con `pdfjs-dist`.
-- 🎨 Diseño moderno con **TailwindCSS** e iconos **Lucide**.
-- 🍬 Notificaciones con **SweetAlert2**.
-- ⚡ Base ultrarrápida con **Vite 5** y HMR.
-
----
-
-## 🛠️ Stack
-
-- **Frontend:** React 19 · Vite 5
-- **Estilos:** TailwindCSS 3 · PostCSS · Autoprefixer
-- **IA:** groq-sdk
-- **PDF:** @react-pdf/renderer · jsPDF · html2canvas · pdfjs-dist
-- **UI:** lucide-react · sweetalert2
-- **Calidad:** ESLint · Prettier · prettier-plugin-tailwindcss
+1. **Formulario en pasos** — vas rellenando `Información personal`, `Resumen`, `Experiencia`, `Educación`, `Habilidades`, `Idiomas`, `Certificaciones`.
+2. **Refinado con IA** — el botón ✨ pasa tu texto por **Groq** y te devuelve la versión mejorada (mismo contenido, mejor prosa). Útil sobre todo en `Resumen profesional` y `Descripción del puesto`.
+3. **Importar CV existente** — subes un PDF, `pdfjs-dist` lo lee, extrae el texto plano y lo cargamos en los campos correspondientes para que solo edites.
+4. **Vista previa** en vivo con la plantilla seleccionada.
+5. **Descargar PDF** — renderiza con **`@react-pdf/renderer`** + `jsPDF` + `html2canvas` y baja el archivo.
 
 ---
 
-## 🚀 Comandos
+## Bajo el capó
+
+- **Frontend:** React 19 + Vite 5.
+- **UI:** TailwindCSS 3 + iconos **Lucide**; notificaciones con **SweetAlert2**.
+- **IA:** `groq-sdk` — llamadas de chat completion desde el navegador.
+- **PDF (export):** `@react-pdf/renderer` (documento estructurado) + `jsPDF` + `html2canvas` (snapshot HTML).
+- **PDF (import):** `pdfjs-dist` para extraer texto de PDFs subidos por el usuario.
+- **Calidad:** ESLint + Prettier con `prettier-plugin-tailwindcss`.
+
+---
+
+## Setup local
 
 ```bash
-# Instalar
+git clone https://github.com/DarkSack/cvpro.git
+cd cvpro
 npm install
-
-# Desarrollo
 npm run dev            # http://localhost:5173
-
-# Build
 npm run build
-
-# Previsualizar el build
 npm run preview
-
-# Lint / formato
 npm run lint
 npm run format
 ```
 
----
-
-## 🔐 Variables de entorno
-
-Crea un archivo `.env` con tu API key de Groq:
+### Variables de entorno
 
 ```env
 VITE_GROQ_API_KEY=gsk_xxxxxxxxxxxxxxxx
 ```
 
-> ⚠️ La clave se expone al bundle del navegador. Para producción se recomienda mover las llamadas a un backend/serverless proxy.
+> ⚠️ La clave se expone al bundle del navegador (limitación de Vite en modo cliente). Para producción mueve la llamada a Groq a un proxy serverless.
 
 ---
 
-## 📁 Estructura
+## Estructura
 
 ```
 cvpro/
 ├── src/
 │   ├── App.jsx
-│   ├── CvGenerator.jsx   # Componente principal
-│   ├── functions.js      # Helpers (llamadas a Groq, formateo, PDF)
+│   ├── CvGenerator.jsx    # Wizard: form multi-step + preview + export
+│   ├── functions.js       # chatCompletion (Groq), extractTextFromPdf, RenderAlert
 │   ├── main.jsx
 │   └── index.css
 ├── public/
 ├── index.html
 ├── vite.config.js
-├── tailwind.config.js
-└── postcss.config.js
+└── tailwind.config.js
 ```
-
----
-
-## 🤝 Contribuir
-
-PRs y sugerencias son bienvenidos. Abre un issue si detectas un bug o quieres proponer una feature.
 
 ---
 
