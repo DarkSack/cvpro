@@ -23,6 +23,7 @@ const CVGenerator = () => {
   const [previewMode, setPreviewMode] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState("modern");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState(null);
   const [uploadedFileName, setUploadedFileName] = useState("");
   const [formData, setFormData] = useState({
@@ -193,15 +194,21 @@ const CVGenerator = () => {
         const response = await chatCompletion(extractedText, "cv");
         populateFormData(response);
       }
-      const props = {
+      RenderAlert({
         icon: "success",
         title: "✅ PDF procesado correctamente",
         timer: 2000,
-      };
-      RenderAlert(props);
+      });
     } catch (error) {
+      console.error("Error procesando PDF:", error);
       setUploadStatus("error");
       setTimeout(() => setUploadStatus(null), 3000);
+      RenderAlert({
+        icon: "error",
+        title: "❌ No se pudo procesar el PDF",
+        text: error.message || "Intenta con otro archivo.",
+        timer: 3500,
+      });
     }
   };
 
@@ -254,129 +261,121 @@ const CVGenerator = () => {
   };
 
   const improveWithGrok = async (section, content, index = null) => {
+    if (!content || !content.trim()) {
+      RenderAlert({
+        icon: "warning",
+        title: "Escribe algo antes de mejorar con IA",
+        timer: 2000,
+      });
+      return;
+    }
     setIsGenerating(true);
     try {
-      setTimeout(async () => {
-        const improvedContent = await chatCompletion(content, "field");
-        if (section === "summary") {
-          handleInputChange("summary", improvedContent);
-        } else if (section === "experience" && index !== null) {
-          handleArrayChange(
-            "experience",
-            index,
-            "description",
-            improvedContent,
-          );
-        } else if (section === "project" && index !== null) {
-          handleArrayChange("projects", index, "description", improvedContent);
-        }
-
-        setIsGenerating(false);
-        const props = {
-          icon: "success",
-          title: "Contenido mejorado con IA de Grok",
-          text: "El contenido ha sido mejorado con éxito",
-          timer: 2000,
-        };
-        RenderAlert(props);
-      }, 2000);
+      const improved = await chatCompletion(content, "field");
+      if (section === "summary") {
+        handleInputChange("summary", improved);
+      } else if (section === "experience" && index !== null) {
+        handleArrayChange("experience", index, "description", improved);
+      } else if (
+        (section === "projects" || section === "project") &&
+        index !== null
+      ) {
+        handleArrayChange("projects", index, "description", improved);
+      }
+      RenderAlert({
+        icon: "success",
+        title: "Contenido mejorado con IA",
+        timer: 1600,
+      });
     } catch (error) {
-      setIsGenerating(false);
-      const props = {
+      console.error(error);
+      RenderAlert({
         icon: "error",
-        title: "❌ Error al conectar la solicitud",
-        timer: 2000,
-      };
-      RenderAlert(props);
+        title: "❌ Error al conectar con la IA",
+        text: error.message,
+        timer: 2500,
+      });
+    } finally {
+      setIsGenerating(false);
     }
   };
 
   const translateToEnglish = async () => {
-    setIsGenerating(true);
-    try {
-      // Simulación de traducción con Grok API
-      setTimeout(() => {
-        setIsGenerating(false);
-        const props = {
-          icon: "success",
-          title: "CV traducido al inglés",
-          timer: 2000,
-        };
-        RenderAlert(props);
-      }, 3000);
-    } catch (error) {
-      setIsGenerating(false);
-      const props = {
-        icon: "error",
-        title: "❌ Error al traducir",
-        timer: 2000,
-      };
-      RenderAlert(props);
-    }
+    // TODO: implementar traducción real con el endpoint de IA (type: "translate")
+    RenderAlert({
+      icon: "info",
+      title: "Traducción no disponible aún",
+      text: "Esta función se conectará al endpoint de IA en la próxima versión.",
+      timer: 3000,
+    });
   };
 
   const downloadCV = async () => {
+    setIsDownloading(true);
     try {
       const previewElement = document.getElementById("cv-preview");
       if (!previewElement) {
-        const props = {
+        RenderAlert({
           icon: "error",
-          title: "❌ Error: No se pudo encontrar la vista previa",
+          title: "❌ No se encontró la vista previa",
           timer: 2000,
-        };
-        RenderAlert(props);
+        });
         return;
       }
 
-      // Crear canvas con configuración optimizada
       const canvas = await html2canvas(previewElement, {
         scale: 2,
         useCORS: true,
         backgroundColor: "#ffffff",
-        width: previewElement.scrollWidth,
-        height: previewElement.scrollHeight,
       });
 
       const imgData = canvas.toDataURL("image/png");
-
-      // PDF sin márgenes
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
         format: "a4",
       });
 
-      // Dimensiones A4 completas
       const pageWidth = 210;
       const pageHeight = 297;
-
-      // Calcular dimensiones proporcionales
       const imgWidth = pageWidth;
       const imgHeight = (canvas.height * pageWidth) / canvas.width;
 
-      // Agregar imagen sin márgenes
-      pdf.addImage(
-        imgData,
-        "PNG",
-        0,
-        0,
-        imgWidth,
-        Math.min(imgHeight, pageHeight),
-      );
+      // ── Paginación: dividir en múltiples páginas si excede A4 ──
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
 
       const fileName = `CV_${formData.fullName || "MiCV"}.pdf`.replace(
         /\s+/g,
         "_",
       );
       pdf.save(fileName);
+
+      RenderAlert({
+        icon: "success",
+        title: "✅ PDF descargado",
+        timer: 1600,
+      });
     } catch (error) {
-      console.error("Error:", error);
-      const props = {
+      console.error("Error generando PDF:", error);
+      RenderAlert({
         icon: "error",
         title: "❌ Error al generar PDF",
-        timer: 2000,
-      };
-      RenderAlert(props);
+        text: error.message,
+        timer: 2500,
+      });
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -805,7 +804,7 @@ const CVGenerator = () => {
                     </h2>
                     <button
                       onClick={() =>
-                        improveWithGrok("experience", exp.description)
+                        improveWithGrok("experience", exp.description, index)
                       }
                       disabled={isGenerating}
                       className="mb-2 flex items-center space-x-2 rounded-lg bg-purple-500 px-4 py-2 text-white hover:bg-purple-600 disabled:opacity-50"
@@ -910,6 +909,84 @@ const CVGenerator = () => {
                           "education",
                           index,
                           "institution",
+                          e.target.value,
+                        )
+                      }
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Ubicación
+                    </label>
+                    <input
+                      type="text"
+                      value={edu.location}
+                      onChange={(e) =>
+                        handleArrayChange(
+                          "education",
+                          index,
+                          "location",
+                          e.target.value,
+                        )
+                      }
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Ciudad, País"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      GPA / Promedio
+                    </label>
+                    <input
+                      type="text"
+                      value={edu.gpa}
+                      onChange={(e) =>
+                        handleArrayChange(
+                          "education",
+                          index,
+                          "gpa",
+                          e.target.value,
+                        )
+                      }
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="9.5 / 10 · 3.8 / 4.0"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Fecha Inicio
+                    </label>
+                    <input
+                      type="month"
+                      value={edu.startDate}
+                      onChange={(e) =>
+                        handleArrayChange(
+                          "education",
+                          index,
+                          "startDate",
+                          e.target.value,
+                        )
+                      }
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Fecha Fin
+                    </label>
+                    <input
+                      type="month"
+                      value={edu.endDate}
+                      onChange={(e) =>
+                        handleArrayChange(
+                          "education",
+                          index,
+                          "endDate",
                           e.target.value,
                         )
                       }
@@ -1297,7 +1374,7 @@ const CVGenerator = () => {
                     </h2>
                     <button
                       onClick={() =>
-                        improveWithGrok("projects", project.description)
+                        improveWithGrok("projects", project.description, index)
                       }
                       disabled={isGenerating}
                       className="mb-2 flex items-center space-x-2 rounded-lg bg-purple-500 px-4 py-2 text-white hover:bg-purple-600 disabled:opacity-50"
@@ -1846,10 +1923,13 @@ const CVGenerator = () => {
 
                 <button
                   onClick={downloadCV}
-                  className="flex items-center space-x-2 rounded-lg bg-green-500 px-4 py-2 text-white hover:bg-green-600"
+                  disabled={isDownloading}
+                  className="flex items-center space-x-2 rounded-lg bg-green-500 px-4 py-2 text-white hover:bg-green-600 disabled:cursor-wait disabled:opacity-70"
                 >
                   <Download className="h-4 w-4" />
-                  <span>Descargar PDF</span>
+                  <span>
+                    {isDownloading ? "Generando PDF…" : "Descargar PDF"}
+                  </span>
                 </button>
               </div>
             </div>
