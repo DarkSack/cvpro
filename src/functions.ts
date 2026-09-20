@@ -28,7 +28,7 @@ export async function chatCompletion(
 }
 
 // ══════════════════════════════════════════════════════════════════
-// PDF extract (pdfjs-dist v5)
+// PDF extract (pdfjs-dist v6)
 // ══════════════════════════════════════════════════════════════════
 
 interface PdfTextItem {
