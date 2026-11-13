@@ -9,3 +9,9 @@ dist-ssr
 .vscode/*
 !.vscode/settings.json
 .idea
+
+# Impeccable: borradores y capturas locales (el contrato y DESIGN.md sí se suben)
+.impeccable/mocks/
+.impeccable/questions/
+.impeccable/review/
+.impeccable/hook.cache.json

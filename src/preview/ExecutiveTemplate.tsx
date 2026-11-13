@@ -1,5 +1,7 @@
 import type { TemplateProps } from "@/types";
+import { Lines } from "./Lines";
 import {
+  fmtMonth,
   formatRange,
   hasCertifications,
   hasEducation,
@@ -7,6 +9,8 @@ import {
   hasLanguages,
   hasProjects,
   hasSkills,
+  labels,
+  levelLabel,
 } from "./shared";
 
 /**
@@ -14,36 +18,26 @@ import {
  * Diseño sobrio con acento oscuro, tipografía serif y jerarquía marcada.
  */
 export default function ExecutiveTemplate({ data }: TemplateProps) {
+  const t = labels(data.lang);
   return (
-    <div
-      className="mx-auto max-w-4xl bg-white p-10"
-      style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
-    >
+    <div className="mx-auto max-w-4xl bg-white p-10" style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}>
       <header className="mb-8 border-b-4 border-slate-800 pb-6">
-        <h1 className="mb-1 text-4xl font-bold uppercase tracking-wide text-slate-900">
-          {data.fullName || "Tu Nombre"}
-        </h1>
-        {data.title && (
-          <p className="mb-3 text-lg text-slate-700">{data.title}</p>
-        )}
-        <div className="flex flex-wrap gap-x-4 text-xs uppercase tracking-widest text-slate-600">
-          {data.email && <span>{data.email}</span>}
-          {data.phone && <span>· {data.phone}</span>}
-          {data.location && <span>· {data.location}</span>}
-          {data.linkedin && <span>· LinkedIn</span>}
-        </div>
+        <h1 className="mb-1 text-4xl font-bold uppercase tracking-wide text-slate-900">{data.fullName || t.name}</h1>
+        {data.title && <p className="mb-3 text-lg text-slate-700">{data.title}</p>}
+        {/* Sin mayúsculas forzadas: un correo en mayúsculas se lee mal y se copia mal. */}
+        <p className="text-xs tracking-wide text-slate-600">
+          {[data.email, data.phone, data.location, data.linkedin].filter(Boolean).join(" · ")}
+        </p>
       </header>
 
       {data.summary && (
-        <Section title="Executive Summary">
-          <p className="text-justify leading-relaxed text-slate-800">
-            {data.summary}
-          </p>
+        <Section title={t.summary}>
+          <Lines text={data.summary} className="space-y-1 leading-relaxed text-slate-800" />
         </Section>
       )}
 
       {hasSkills(data) && (
-        <Section title="Core Competencies">
+        <Section title={t.skills}>
           <div className="grid grid-cols-3 gap-x-6 gap-y-1 text-sm text-slate-800">
             {data.skills.filter(Boolean).map((s, i) => (
               <div key={i} className="border-l-2 border-slate-700 pl-3">
@@ -55,51 +49,48 @@ export default function ExecutiveTemplate({ data }: TemplateProps) {
       )}
 
       {hasExperience(data) && (
-        <Section title="Professional Experience">
+        <Section title={t.experience}>
           {data.experience.map((exp, i) => (
             <article key={i} className="mb-6 last:mb-0">
-              <header className="mb-1 flex items-baseline justify-between">
+              <header className="mb-1 flex items-baseline justify-between gap-4">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">
-                    {exp.position}
-                  </h3>
+                  <h3 className="text-lg font-bold text-slate-900">{exp.position}</h3>
                   <p className="text-sm italic text-slate-700">
                     {[exp.company, exp.location].filter(Boolean).join(" · ")}
                   </p>
                 </div>
-                <span className="text-sm uppercase tracking-wider text-slate-600">
-                  {formatRange(exp.startDate, exp.endDate, exp.current)}
+                <span className="shrink-0 text-sm uppercase tracking-wider text-slate-600">
+                  {formatRange(exp.startDate, exp.endDate, exp.current, data.lang)}
                 </span>
               </header>
-              {exp.description && (
-                <div className="mt-2 space-y-1 text-sm leading-relaxed text-slate-800">
-                  {exp.description.split("\n").map((line, j) => (
-                    <p key={j} className="pl-4 -indent-4">
-                      ▸ {line}
-                    </p>
-                  ))}
-                </div>
-              )}
+              <Lines
+                text={exp.description}
+                bullet="▸"
+                className="mt-2 space-y-1 text-sm leading-relaxed text-slate-800"
+                lineClassName="pl-4 -indent-4"
+              />
             </article>
           ))}
         </Section>
       )}
 
       {hasEducation(data) && (
-        <Section title="Education">
+        <Section title={t.education}>
           {data.education.map((edu, i) => (
-            <div key={i} className="mb-3 last:mb-0 flex items-baseline justify-between">
+            <div key={i} className="mb-3 flex items-baseline justify-between gap-4 last:mb-0">
               <div>
                 <h3 className="font-bold text-slate-900">{edu.degree}</h3>
                 <p className="text-sm italic text-slate-700">
                   {[edu.institution, edu.location].filter(Boolean).join(" · ")}
                 </p>
                 {edu.gpa && (
-                  <p className="text-sm text-slate-600">GPA: {edu.gpa}</p>
+                  <p className="text-sm text-slate-600">
+                    {t.gpa}: {edu.gpa}
+                  </p>
                 )}
               </div>
-              <span className="text-sm uppercase tracking-wider text-slate-600">
-                {formatRange(edu.startDate, edu.endDate, false)}
+              <span className="shrink-0 text-sm uppercase tracking-wider text-slate-600">
+                {formatRange(edu.startDate, edu.endDate, false, data.lang)}
               </span>
             </div>
           ))}
@@ -107,54 +98,44 @@ export default function ExecutiveTemplate({ data }: TemplateProps) {
       )}
 
       {hasCertifications(data) && (
-        <Section title="Professional Credentials">
+        <Section title={t.certifications}>
           {data.certifications
             .filter((c) => c.name)
             .map((c, i) => (
-              <div key={i} className="mb-2 flex items-start justify-between text-sm">
+              <div key={i} className="mb-2 flex items-start justify-between gap-4 text-sm">
                 <div>
                   <strong className="text-slate-900">{c.name}</strong>
-                  {c.issuer && (
-                    <span className="text-slate-700"> · {c.issuer}</span>
-                  )}
+                  {c.issuer && <span className="text-slate-700"> · {c.issuer}</span>}
                 </div>
-                <span className="text-slate-600">{c.date}</span>
+                <span className="shrink-0 text-slate-600">{fmtMonth(c.date, data.lang)}</span>
               </div>
             ))}
         </Section>
       )}
 
       {hasProjects(data) && (
-        <Section title="Key Initiatives">
+        <Section title={t.projects}>
           {data.projects
             .filter((p) => p.name)
             .map((p, i) => (
               <div key={i} className="mb-3 last:mb-0">
-                <div className="flex items-baseline justify-between">
+                <div className="flex items-baseline justify-between gap-4">
                   <strong className="text-slate-900">{p.name}</strong>
-                  {p.date && (
-                    <span className="text-sm text-slate-600">{p.date}</span>
-                  )}
+                  {p.date && <span className="shrink-0 text-sm text-slate-600">{fmtMonth(p.date, data.lang)}</span>}
                 </div>
-                {p.technologies && (
-                  <p className="text-sm italic text-slate-700">
-                    {p.technologies}
-                  </p>
-                )}
-                {p.description && (
-                  <p className="text-sm text-slate-800">{p.description}</p>
-                )}
+                {p.technologies && <p className="text-sm italic text-slate-700">{p.technologies}</p>}
+                <Lines text={p.description} className="text-sm text-slate-800" />
               </div>
             ))}
         </Section>
       )}
 
       {hasLanguages(data) && (
-        <Section title="Languages">
+        <Section title={t.languages}>
           <p className="text-sm text-slate-800">
             {data.languages
               .filter((l) => l.language)
-              .map((l) => `${l.language} — ${l.level}`)
+              .map((l) => `${l.language} — ${levelLabel(l.level, data.lang)}`)
               .join(" · ")}
           </p>
         </Section>
@@ -163,18 +144,10 @@ export default function ExecutiveTemplate({ data }: TemplateProps) {
   );
 }
 
-function Section({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mb-7">
-      <h2 className="mb-3 text-xs font-bold uppercase tracking-[0.25em] text-slate-800">
-        {title}
-      </h2>
+      <h2 className="mb-3 text-xs font-bold uppercase tracking-[0.25em] text-slate-800">{title}</h2>
       {children}
     </section>
   );

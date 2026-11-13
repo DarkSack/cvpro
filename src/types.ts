@@ -4,6 +4,9 @@
 
 export type LanguageLevel = "Básico" | "Intermedio" | "Avanzado" | "Nativo";
 
+/** Idioma en que se imprime el CV (títulos, fechas, niveles). */
+export type CVLang = "es" | "en";
+
 export interface CVExperience {
   position: string;
   company: string;
@@ -44,6 +47,7 @@ export interface CVProject {
 }
 
 export interface CVData {
+  lang: CVLang;
   photo: string;
   fullName: string;
   title: string;
@@ -95,13 +99,3 @@ export type StepId =
   | "languages"
   | "certifications"
   | "projects";
-
-// ── Alerts helper ────────────────────────────────────────────────
-
-export type AlertIcon = "success" | "error" | "warning" | "info" | "question";
-export interface AlertProps {
-  icon: AlertIcon;
-  title: string;
-  text?: string;
-  timer?: number;
-}
