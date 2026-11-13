@@ -23,6 +23,24 @@
         ],
         "createdAt": "2026-11-13T22:45:05.418Z",
         "reason": "Agent: the Creative CV template's purple palette is the printed document's own pre-existing identity, not app chrome"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "georgia",
+        "createdAt": "2026-11-13T22:52:26.263Z",
+        "reason": "Agent: font of the printed CV sheet (templates in src/preview), which DESIGN.md places outside the app system"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "arial",
+        "createdAt": "2026-11-13T22:52:26.518Z",
+        "reason": "Agent: font of the printed CV sheet (templates in src/preview), which DESIGN.md places outside the app system"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "apple color emoji",
+        "createdAt": "2026-11-13T22:52:26.776Z",
+        "reason": "Agent: font of the printed CV sheet (templates in src/preview), which DESIGN.md places outside the app system"
       }
     ]
   }
