@@ -23,7 +23,7 @@ Herramienta web gratuita de la familia [Sackito](https://sackito.online). Te lle
 - **Frontend:** React 19 + Vite 5 + TypeScript, Tailwind 3, iconos Lucide.
 - **Diseño:** mundo Sackito (tokens de sackito.online, Archivo condensada, Geist y Geist Mono autoalojadas). Modo claro y oscuro según el sistema. Ver `PRODUCT.md` y `DESIGN.md`.
 - **Accesibilidad:** objetivo WCAG 2.2 AA. Etiquetas ligadas a cada campo, errores con `aria-describedby`, diálogo nativo `<dialog>`, avisos con `aria-live`, foco al título de cada paso, respeto a «reducir movimiento».
-- **IA:** función serverless `api/improveField.ts` (Vercel) que llama a Groq (`openai/gpt-oss-120b`). La clave vive solo en el servidor. Límite de uso: 5 peticiones por minuto y 30 al día por IP, 300 al día en total.
+- **IA:** función serverless `api/improveField.ts` (Vercel) que llama a Groq (`openai/gpt-oss-120b`). La clave vive solo en el servidor. Límite de uso: 5 peticiones por minuto y 30 al día por IP, 300 al día en total. Con Upstash Redis o Vercel KV configurados el conteo es compartido entre instancias; sin ellos, cada instancia cuenta en memoria.
 - **PDF (export):** CSS de impresión (`@media print` en `src/index.css`). Sin librerías.
 - **PDF (import):** `pdfjs-dist`, que se descarga solo cuando subes un PDF.
 - **Validación:** `zod`.
@@ -60,6 +60,7 @@ GROQ_API_KEY=gsk_xxxxxxxxxxxxxxxx
 
 1. Importa el repositorio en Vercel (framework: Vite).
 2. En *Settings → Environment Variables* define `GROQ_API_KEY`.
+   Opcional: conecta Upstash Redis (o Vercel KV) desde *Storage*; sus variables se leen solas y el límite de uso pasa a ser compartido.
 3. Despliega. La carpeta `api/` se publica sola como función serverless.
 
 ---

@@ -15,39 +15,75 @@ type Kind = keyof typeof MAX_CHARS;
 // ── Límite de peticiones ─────────────────────────────────────────
 // Protege la cuota de Groq: por IP (un visitante no acapara) y global
 // (aunque lleguen muchas IP, el gasto diario tiene techo).
-// shortcut: los contadores viven en la memoria de cada instancia; si Vercel
-// levanta varias, el techo real es mayor. Pasar a un almacén compartido
-// (Upstash/Vercel KV) si hay abuso real.
+// Con Redis (Upstash o Vercel KV) el conteo es compartido entre todas las
+// instancias de Vercel; sin Redis, o si no responde, cada instancia cuenta
+// en su memoria y el techo real crece con el número de instancias.
 const MINUTE = 60_000;
 const DAY = 86_400_000;
 const PER_IP_MINUTE = 5;
 const PER_IP_DAY = 30;
 const GLOBAL_DAY = 300;
 
-// Ventanas fijas: el contador se reinicia al cambiar de minuto o de día.
-const counters = new Map<string, { window: number; count: number }>();
-
-function take(key: string, windowMs: number, max: number, now: number): boolean {
-  const window = Math.floor(now / windowMs);
-  const counter = counters.get(key);
-  if (counter?.window !== window) {
-    counters.set(key, { window, count: 1 });
-    return true;
-  }
-  return ++counter.count <= max;
+interface Limit {
+  key: string; // incluye la ventana: el contador se reinicia al cambiar de minuto o de día
+  ms: number;
+  max: number;
+  wait: number; // segundos de Retry-After si se pasa
 }
+
+function limits(ip: string, now: number): Limit[] {
+  return [
+    { key: "global", ms: DAY, max: GLOBAL_DAY, wait: 3600 },
+    { key: `dia:${ip}`, ms: DAY, max: PER_IP_DAY, wait: 3600 },
+    { key: `min:${ip}`, ms: MINUTE, max: PER_IP_MINUTE, wait: 60 },
+  ].map((l) => ({ ...l, key: `cvpro:${l.key}:${Math.floor(now / l.ms)}` }));
+}
+
+/** Suma 1 a cada contador en Redis; null si no hay Redis o no respondió. */
+async function sharedCounts(list: Limit[]): Promise<number[] | null> {
+  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+  if (!url || !token) return null;
+  try {
+    const res = await fetch(`${url}/pipeline`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify(
+        list.flatMap((l) => [
+          ["INCR", l.key],
+          ["PEXPIRE", l.key, l.ms, "NX"],
+        ])
+      ),
+      signal: AbortSignal.timeout(2000),
+    });
+    if (!res.ok) throw new Error(`Redis respondió ${res.status}`);
+    const out = (await res.json()) as { result?: unknown }[];
+    const counts = list.map((_, i) => Number(out[i * 2]?.result));
+    if (!counts.every(Number.isFinite)) throw new Error("Respuesta de Redis inesperada");
+    return counts;
+  } catch (err) {
+    console.error("Límite compartido no disponible; uso la memoria:", err);
+    return null;
+  }
+}
+
+const counters = new Map<string, number>();
 
 /** Segundos que debe esperar quien llama, o 0 si puede pasar. */
-function retryAfter(ip: string): number {
-  const now = Date.now();
-  // Lo viejo se tira de golpe: un mapa por IP no debe crecer sin fin.
+async function retryAfter(ip: string): Promise<number> {
+  const list = limits(ip, Date.now());
+  const counts = await sharedCounts(list);
+  if (counts) return list.find((l, i) => counts[i] > l.max)?.wait ?? 0;
+
+  // Lo viejo se tira de golpe: el mapa no debe crecer sin fin.
   if (counters.size > 20_000) counters.clear();
-  if (!take("global", DAY, GLOBAL_DAY, now)) return 3600;
-  if (!take(`dia:${ip}`, DAY, PER_IP_DAY, now)) return 3600;
-  if (!take(`min:${ip}`, MINUTE, PER_IP_MINUTE, now)) return 60;
+  for (const l of list) {
+    const n = (counters.get(l.key) ?? 0) + 1;
+    counters.set(l.key, n);
+    if (n > l.max) return l.wait;
+  }
   return 0;
 }
-
 const SYSTEM: Record<Exclude<Kind, "translate">, string> = {
   field: [
     "Eres redactor de currículums.",
@@ -113,7 +149,7 @@ export async function POST(request: Request): Promise<Response> {
 
   // Vercel pone la IP real del visitante al inicio de x-forwarded-for.
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0].trim() || "desconocida";
-  const wait = retryAfter(ip);
+  const wait = await retryAfter(ip);
   if (wait)
     return Response.json(
       {

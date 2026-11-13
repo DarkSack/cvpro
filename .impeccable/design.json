@@ -38,9 +38,7 @@
     },
     "shadows": [
       { "name": "sheet-shadow", "value": "0 24px 48px -24px rgb(0 0 0 / 0.8), 0 2px 6px rgb(0 0 0 / 0.4)", "purpose": "Separa la hoja A4 de la columna hundida (oscuro). En claro: 0 24px 48px -28px rgb(11 13 16 / 0.35), 0 1px 3px rgb(11 13 16 / 0.12)." },
-      { "name": "float-notice", "value": "0 12px 32px -12px rgb(0 0 0 / 0.6)", "purpose": "Aviso flotante." },
-      { "name": "float-menu", "value": "0 16px 40px -12px rgb(0 0 0 / 0.6)", "purpose": "Panel del menú Más." },
-      { "name": "float-dialog", "value": "0 24px 64px -16px rgb(0 0 0 / 0.7)", "purpose": "Diálogo de confirmación." }
+      { "name": "float", "value": "var(--float-shadow)", "purpose": "Aviso, menú Más y diálogo. Oscuro: 0 16px 40px -12px rgb(0 0 0 / 0.65). Claro: 0 16px 40px -16px rgb(11 13 16 / 0.28), 0 1px 3px rgb(11 13 16 / 0.1)." }
     ],
     "motion": [
       { "name": "rise", "value": "0.5s cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Único momento animado: entrada del título del paso (sube 0.35em, desenfoque 4px)." },

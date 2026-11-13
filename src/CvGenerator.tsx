@@ -349,9 +349,13 @@ export default function CvGenerator() {
       {/* ── Cabecera ── */}
       <header inert={sheetOpen} className="shrink-0 border-b border-line print:hidden">
         <div className="flex h-14 items-center justify-between gap-3 px-4 lg:px-6">
-          <p className="flex items-baseline gap-2.5">
+          <p className="flex items-center gap-2.5">
             <span className="display text-[1.75rem]">CVpro</span>
-            <a href="https://sackito.online" className="meta hover:text-accent-ink">
+            <a
+              href="https://sackito.online"
+              className="meta flex min-h-11 items-center gap-1.5 hover:text-accent-ink"
+            >
+              <img src="/sackito-64.png" alt="" width={22} height={22} className="h-[22px] w-[22px]" />
               por Sackito
             </a>
           </p>
@@ -652,7 +656,7 @@ function MoreMenu({
         <MoreHorizontal className="h-4 w-4" aria-hidden />
         <span className="sr-only sm:not-sr-only">Más</span>
       </summary>
-      <div className="absolute right-0 top-full z-40 mt-2 w-64 border border-line-strong bg-raised py-1 shadow-[0_16px_40px_-12px_rgb(0_0_0/0.6)]">
+      <div className="absolute right-0 top-full z-40 mt-2 w-64 border border-line-strong bg-raised py-1 shadow-[var(--float-shadow)]">
         <button
           type="button"
           className={item}

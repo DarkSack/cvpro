@@ -46,8 +46,19 @@ function devApi(): Plugin {
   };
 }
 
+// Las redes piden la imagen para compartir con dirección completa. En Vercel
+// sale de VERCEL_PROJECT_PRODUCTION_URL; fuera de Vercel, de SITE_URL.
+function siteUrl(): Plugin {
+  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  const url = (process.env.SITE_URL || (vercel ? `https://${vercel}` : "")).replace(/\/$/, "");
+  return {
+    name: "site-url",
+    transformIndexHtml: (html) => html.replaceAll("%SITE_URL%", url),
+  };
+}
+
 export default defineConfig({
-  plugins: [react(), devApi()],
+  plugins: [react(), devApi(), siteUrl()],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

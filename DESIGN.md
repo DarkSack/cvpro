@@ -171,7 +171,7 @@ Neutros fríos casi negros (o papel cálido en claro) con un único rubí.
 - **Body** (400, 1rem, 1.5): texto de ayuda del paso (con `max-width: 65ch`) y contenido de campos.
 - **Title** (500, 0.875rem): etiquetas de campo y nombres de paso en la navegación.
 - **Label** (mono, 0.75rem, 0.08em, mayúsculas): texto de todos los botones `.bracket`.
-- **Meta** (mono, 0.6875rem, 0.06em, mayúsculas, cifras tabulares, color muted): firma «por Sackito», número de paso, «Se guarda solo en este navegador», leyenda de cada entrada («Puesto 1»), «Hasta hoy».
+- **Meta** (mono, 0.6875rem, 0.06em, mayúsculas, cifras tabulares, color muted): firma «por Sackito» (con el avatar de Sack a 22px, `public/sackito-64.png`, que también es el favicon), número de paso, «Se guarda solo en este navegador», leyenda de cada entrada («Puesto 1»), «Hasta hoy».
 
 ### Named Rules
 **The Mono-es-dato Rule.** Geist Mono solo lleva datos de estado y acciones. Nunca va en párrafos ni en títulos.
@@ -196,7 +196,8 @@ La app es plana: la profundidad viene del tono (sunken, canvas y raised) y de la
 
 ### Shadow Vocabulary
 - **Sombra de hoja** (`--sheet-shadow`, cambia con el tema): separa el papel de la columna hundida. Se quita al imprimir.
-- **Flotante** (`0 12px 32px -12px` a `0 24px 64px -16px`, negro al 60-70 %): aviso, menú «Más» y diálogo, en orden creciente.
+- **Flotante** (`--float-shadow`, cambia con el tema: negro al 65 % en oscuro, tinta al 28 % en claro): aviso, menú «Más» y diálogo.
+- **Velo del diálogo** (`--backdrop`, cambia con el tema): oscurece la pantalla detrás del diálogo.
 
 ### Named Rules
 **The Plano-por-defecto Rule.** Botones, campos y entradas no llevan sombra. La sombra es para el papel y para lo que tapa la pantalla.
@@ -263,3 +264,7 @@ Hay un solo momento animado: el título del paso entra con `rise` (0.5s, `cubic-
 - **Don't** aplicar los tokens de la app a las plantillas de la hoja, ni las de la hoja a la app.
 - **Don't** añadir sombras a botones, campos o entradas.
 - **Don't** animar nada más que la entrada del título del paso.
+
+## Imagen para compartir
+
+`public/og.png` (1200×630): fondo canvas con retícula, barra rubí al pie, CVPRO en display, lema en Geist, datos en mono y una captura real de la hoja con el marco «[ EDITANDO ]». La URL absoluta sale de `SITE_URL` o de `VERCEL_PROJECT_PRODUCTION_URL` (plugin `siteUrl` en `vite.config.ts`). Las tres imágenes de `public/` llevan su procedencia grabada (`impeccable embed-prompt`).

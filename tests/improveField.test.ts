@@ -131,6 +131,73 @@ test("una petición inválida no gasta cupo", async () => {
   assert.equal(res.status, 200);
 });
 
+// ── Límite compartido (Upstash / Vercel KV) ──────────────────────
+
+/** Envuelve el fetch falso: las llamadas a Redis responden `counts` por ventana. */
+function fakeRedis(counts: number[] | "falla") {
+  const groq = globalThis.fetch;
+  const calls: unknown[][] = [];
+  globalThis.fetch = (async (url: string | URL | Request, init?: RequestInit) => {
+    if (!String(url).startsWith("https://redis.test")) return groq(url, init);
+    if (counts === "falla") throw new Error("sin red");
+    const commands = JSON.parse(String(init?.body)) as unknown[][];
+    calls.push(...commands);
+    return Response.json(
+      commands.map((c, i) => ({ result: c[0] === "INCR" ? counts[i / 2] : 1 }))
+    );
+  }) as typeof fetch;
+  return calls;
+}
+
+test("con Redis configurado, el conteo compartido decide el 429", async () => {
+  process.env.UPSTASH_REDIS_REST_URL = "https://redis.test";
+  process.env.UPSTASH_REDIS_REST_TOKEN = "tok";
+  try {
+    const calls = fakeRedis([10, 3, 6]); // global, día de la IP, minuto de la IP
+
+    const res = await post(OK);
+
+    assert.equal(res.status, 429);
+    assert.equal(res.headers.get("Retry-After"), "60");
+    assert.equal(groqCalls.length, 0);
+    assert.equal(calls.filter((c) => c[0] === "INCR").length, 3);
+  } finally {
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+  }
+});
+
+test("también acepta las variables de Vercel KV", async () => {
+  process.env.KV_REST_API_URL = "https://redis.test";
+  process.env.KV_REST_API_TOKEN = "tok";
+  try {
+    fakeRedis([301, 1, 1]);
+
+    const res = await post(OK);
+
+    assert.equal(res.status, 429);
+    assert.equal(res.headers.get("Retry-After"), "3600");
+  } finally {
+    delete process.env.KV_REST_API_URL;
+    delete process.env.KV_REST_API_TOKEN;
+  }
+});
+
+test("si Redis no responde, sigue con el límite en memoria", async () => {
+  process.env.UPSTASH_REDIS_REST_URL = "https://redis.test";
+  process.env.UPSTASH_REDIS_REST_TOKEN = "tok";
+  try {
+    fakeRedis("falla");
+
+    const res = await post(OK);
+
+    assert.equal(res.status, 200);
+  } finally {
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+  }
+});
+
 // ── Petición y respuesta ─────────────────────────────────────────
 
 test("devuelve el texto mejorado y manda el texto del usuario a Groq con la clave del servidor", async () => {

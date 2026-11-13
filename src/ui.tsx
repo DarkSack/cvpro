@@ -180,7 +180,7 @@ export function useNotice() {
     >
       {notice && (
         <p
-          className={`pointer-events-auto flex max-w-md items-start gap-2 border bg-raised px-4 py-3 text-sm shadow-[0_12px_32px_-12px_rgb(0_0_0/0.6)] ${
+          className={`pointer-events-auto flex max-w-md items-start gap-2 border bg-raised px-4 py-3 text-sm shadow-[var(--float-shadow)] ${
             notice.tone === "error" ? "border-accent text-ink" : "border-line-strong text-ink"
           }`}
         >
@@ -231,7 +231,7 @@ export function useConfirm() {
       aria-labelledby="confirm-title"
       aria-describedby="confirm-text"
       onClose={() => resolver.current?.(ref.current?.returnValue === "ok")}
-      className="w-[min(28rem,calc(100vw-2rem))] border border-line-strong bg-raised p-0 text-ink shadow-[0_24px_64px_-16px_rgb(0_0_0/0.7)]"
+      className="w-[min(28rem,calc(100vw-2rem))] border border-line-strong bg-raised p-0 text-ink shadow-[var(--float-shadow)]"
     >
       <form method="dialog" className="p-6">
         <h2 id="confirm-title" className="display text-3xl">
