@@ -112,7 +112,7 @@ export default function CvGenerator() {
     const target = title
       ? [...sheet.querySelectorAll("h2")].find((h) => h.textContent?.trim().toLowerCase() === title)
           ?.parentElement
-      : sheet.querySelector("h1")?.parentElement;
+      : (sheet.querySelector("header") ?? sheet.querySelector("h1")?.parentElement);
     target?.setAttribute("data-editing", "");
   });
 
@@ -356,7 +356,7 @@ export default function CvGenerator() {
             </a>
           </p>
           <div className="flex items-center gap-2">
-            <p className="meta mr-2 hidden xl:block">Se guarda solo en este navegador</p>
+            <p className="meta mr-2 hidden lg:block">Se guarda solo en este navegador</p>
             <MoreMenu onExport={exportJson} onImport={importJson} onReset={resetAll} />
             <button type="button" onClick={savePdf} className="bracket bracket-solid">
               <Download className="h-4 w-4" aria-hidden />
@@ -407,16 +407,18 @@ export default function CvGenerator() {
 
       <div className="flex-1 lg:grid lg:min-h-0 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] print:block">
         {/* ── Formulario del paso ── */}
-        <main id="contenido" ref={formScrollRef} inert={sheetOpen} className="lg:overflow-y-auto print:hidden">
+        <main id="contenido" ref={formScrollRef} inert={sheetOpen} className="blueprint lg:overflow-y-auto print:hidden">
           <div className="mx-auto max-w-2xl px-4 pb-32 pt-8 sm:pt-10 lg:px-10 lg:pb-12">
             <h1
+              key={step.id}
               ref={headingRef}
               tabIndex={-1}
-              className="display text-balance text-5xl outline-none sm:text-6xl"
+              className="display rise text-balance text-5xl outline-none sm:text-6xl"
             >
               {step.title}
             </h1>
             <p className="mt-4 max-w-prose text-muted">{step.hint}</p>
+            <p className="meta mt-3 lg:hidden">Se guarda solo en este navegador</p>
 
             <div className="mt-8">
               <step.Form ctx={ctx} />
@@ -489,7 +491,7 @@ export default function CvGenerator() {
               {(["es", "en"] as const).map((l) => (
                 <label
                   key={l}
-                  className="bracket !min-h-11 !px-3 has-[:checked]:!border-ink has-[:checked]:!bg-ink has-[:checked]:!text-canvas [&+&]:-ml-px"
+                  className="bracket !min-h-11 !px-3 has-[:checked]:!border-accent has-[:checked]:!bg-accent-soft has-[:checked]:!text-accent-ink [&+&]:-ml-px"
                 >
                   <input
                     type="radio"

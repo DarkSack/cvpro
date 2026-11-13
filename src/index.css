@@ -245,23 +245,38 @@
 }
 
 /* La sección que estás llenando se enmarca en rubí sobre la hoja. */
+/* Dividir entre el zoom de la hoja deja marco y etiqueta del mismo tamaño
+   en pantalla, por chica que se vea la hoja. */
 #cv-preview [data-editing] {
+  --z: var(--sheet-zoom, 1);
   position: relative;
-  outline: 2px solid var(--accent);
-  outline-offset: 6px;
+  outline: calc(2px / var(--z)) solid var(--accent);
+  outline-offset: calc(6px / var(--z));
   transition: outline-color 0.3s;
 }
 #cv-preview [data-editing]::before {
   content: "[ EDITANDO ]";
   position: absolute;
-  right: -6px;
-  top: -6px;
+  right: calc(-6px / var(--z));
+  top: calc(-6px / var(--z));
   transform: translateY(-100%);
-  padding: 2px 6px;
+  padding: calc(2px / var(--z)) calc(6px / var(--z));
   background: var(--accent);
   color: #fff;
-  font: 600 13px/1.3 "Geist Mono Variable", ui-monospace, monospace;
+  font: 600 calc(11px / var(--z)) / 1.3 "Geist Mono Variable", ui-monospace, monospace;
   letter-spacing: 0.08em;
+}
+
+/* El título del paso entra al cambiar de paso: el único momento animado. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.35em);
+    filter: blur(4px);
+  }
+}
+.rise {
+  animation: rise 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* "Guardar como PDF" imprime solo #cv-preview, a página completa. */

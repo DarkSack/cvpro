@@ -1,0 +1,29 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "geist",
+        "createdAt": "2026-11-13T22:45:04.596Z",
+        "reason": "Agent: Geist is the pinned Sackito family body face (sackito.online), brand-mandated in PRODUCT.md"
+      },
+      {
+        "rule": "overused-font",
+        "value": "geist mono",
+        "createdAt": "2026-11-13T22:45:05.075Z",
+        "reason": "Agent: Geist Mono is the pinned Sackito meta/data face, brand-mandated"
+      },
+      {
+        "rule": "ai-color-palette",
+        "value": "*",
+        "files": [
+          "src/preview/CreativeTemplate.tsx"
+        ],
+        "createdAt": "2026-11-13T22:45:05.418Z",
+        "reason": "Agent: the Creative CV template's purple palette is the printed document's own pre-existing identity, not app chrome"
+      }
+    ]
+  }
+}

@@ -29,7 +29,7 @@ const optionalPhone = z
 const monthDate = z
   .string()
   .refine((v) => !v || /^\d{4}-\d{2}$/.test(v), {
-    message: "Elige mes y año",
+    message: "Escribe mes y año, por ejemplo 2024-03",
   });
 
 export const CVDataSchema = z.object({

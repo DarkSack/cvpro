@@ -89,7 +89,9 @@ export function TextField({
           type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
+          // Safari de Mac y Firefox no tienen selector de mes: ahí es texto libre.
+          placeholder={placeholder ?? (type === "month" ? "2024-03" : undefined)}
+          pattern={type === "month" ? "\\d{4}-\\d{2}" : undefined}
           autoComplete={autoComplete}
           className="field"
         />
