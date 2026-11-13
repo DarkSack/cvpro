@@ -262,7 +262,7 @@
   transform: translateY(-100%);
   padding: calc(2px / var(--z)) calc(6px / var(--z));
   background: var(--accent);
-  color: #fff;
+  color: var(--bg); /* el blanco sobre el rubí oscuro no llega a 4.5:1 */
   font: 600 calc(11px / var(--z)) / 1.3 "Geist Mono Variable", ui-monospace, monospace;
   letter-spacing: 0.08em;
 }

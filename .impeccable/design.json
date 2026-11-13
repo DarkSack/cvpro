@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-13T23:30:00.000Z",
+  "title": "Design System: CVpro",
+  "extensions": {
+    "colorMeta": {
+      "canvas": { "role": "neutral", "displayName": "Negro de cuaderno", "tonalRamp": ["#030405", "#080a0d", "#11151b", "#1d232b", "#2f3640", "#4a525e", "#737b87", "#a9afb8"] },
+      "raised": { "role": "neutral", "displayName": "Superficie elevada", "tonalRamp": ["#05070a", "#0d1015", "#161a21", "#22272f", "#343a44", "#4f5662", "#787f8a", "#adb2ba"] },
+      "sunken": { "role": "neutral", "displayName": "Fondo hundido", "tonalRamp": ["#020304", "#05070a", "#0c0f13", "#181c22", "#2a3038", "#454c57", "#6f7782", "#a6acb5"] },
+      "ink": { "role": "neutral", "displayName": "Tinta", "tonalRamp": ["#2a2d32", "#464a51", "#666b73", "#878c94", "#a8acb3", "#c8cbd0", "#e3e5e8", "#f2f3f5"] },
+      "muted": { "role": "neutral", "displayName": "Gris de nota", "tonalRamp": ["#1f2227", "#33373e", "#4a4f57", "#636973", "#8b929d", "#a6acb5", "#c4c8ce", "#e1e3e6"] },
+      "line": { "role": "neutral", "displayName": "Línea", "canonical": "rgb(242 243 245 / 0.09)" },
+      "line-strong": { "role": "neutral", "displayName": "Línea fuerte", "canonical": "rgb(242 243 245 / 0.2)" },
+      "grid-line": { "role": "neutral", "displayName": "Retícula", "canonical": "rgb(242 243 245 / 0.035)" },
+      "accent": { "role": "primary", "displayName": "Rubí Sackito", "tonalRamp": ["#3d0d17", "#621626", "#8a1f35", "#b52a42", "#e0506a", "#ff8196", "#ffb3c0", "#ffe0e5"] },
+      "accent-ink": { "role": "primary", "displayName": "Rubí tinta", "tonalRamp": ["#3d0d17", "#621626", "#9c1f35", "#c83a54", "#e0506a", "#ff8196", "#ffb3c0", "#ffe0e5"] },
+      "accent-soft": { "role": "primary", "displayName": "Velo rubí", "canonical": "rgb(224 80 106 / 0.12)" },
+      "canvas-light": { "role": "neutral", "displayName": "Papel cálido", "tonalRamp": ["#3b3a36", "#5c5b56", "#7f7d77", "#a3a19a", "#c6c4bd", "#e1dfd9", "#f3f2ee", "#fdfcfa"] },
+      "raised-light": { "role": "neutral", "displayName": "Superficie elevada (claro)", "tonalRamp": ["#3d3c39", "#5f5e5a", "#83817c", "#a7a5a0", "#cac8c3", "#e8e6e1", "#fbfaf7", "#ffffff"] },
+      "sunken-light": { "role": "neutral", "displayName": "Fondo hundido (claro)", "tonalRamp": ["#373631", "#57554f", "#7a7871", "#9e9c94", "#c1bfb8", "#e9e7e1", "#f2f1ec", "#fbfaf7"] },
+      "ink-light": { "role": "neutral", "displayName": "Tinta (claro)", "tonalRamp": ["#0b0d10", "#1d2026", "#33373e", "#4d525a", "#6b7079", "#8e939a", "#b6bac0", "#e0e2e5"] },
+      "muted-light": { "role": "neutral", "displayName": "Gris de nota (claro)", "tonalRamp": ["#1a1d21", "#2d3137", "#40454c", "#555b64", "#737982", "#959aa2", "#bcc0c5", "#e2e4e7"] },
+      "line-light": { "role": "neutral", "displayName": "Línea (claro)", "canonical": "rgb(11 13 16 / 0.1)" },
+      "line-strong-light": { "role": "neutral", "displayName": "Línea fuerte (claro)", "canonical": "rgb(11 13 16 / 0.24)" },
+      "grid-line-light": { "role": "neutral", "displayName": "Retícula (claro)", "canonical": "rgb(11 13 16 / 0.04)" },
+      "accent-light": { "role": "primary", "displayName": "Rubí Sackito (claro)", "tonalRamp": ["#3d0d17", "#621626", "#9c1f35", "#b52a42", "#d2465f", "#e9798c", "#f5b0bc", "#fbe0e5"] },
+      "accent-ink-light": { "role": "primary", "displayName": "Rubí tinta (claro)", "tonalRamp": ["#2a0910", "#4d111e", "#73182b", "#9c1f35", "#b52a42", "#d2465f", "#ec9aa8", "#fbe0e5"] },
+      "accent-soft-light": { "role": "primary", "displayName": "Velo rubí (claro)", "canonical": "rgb(181 42 66 / 0.09)" },
+      "sheet-paper": { "role": "neutral", "displayName": "Papel de la hoja", "tonalRamp": ["#1a1a1a", "#3d3d3d", "#666666", "#8f8f8f", "#b8b8b8", "#dedede", "#f5f5f5", "#ffffff"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Título de cada paso (3rem en móvil, 3.75rem desde 640px) y marca CVpro (1.75rem). Archivo al 72 % de ancho, mayúsculas." },
+      "headline": { "displayName": "Headline", "purpose": "Título del diálogo de confirmación." },
+      "body": { "displayName": "Body", "purpose": "Ayuda del paso (65ch máx.) y contenido de campos." },
+      "title": { "displayName": "Title", "purpose": "Etiquetas de campo y nombres de paso." },
+      "label": { "displayName": "Label", "purpose": "Texto de todos los botones .bracket, en mayúsculas." },
+      "meta": { "displayName": "Meta", "purpose": "Datos de estado: paso, guardado, firma, leyenda de entrada. Mayúsculas, color muted." }
+    },
+    "shadows": [
+      { "name": "sheet-shadow", "value": "0 24px 48px -24px rgb(0 0 0 / 0.8), 0 2px 6px rgb(0 0 0 / 0.4)", "purpose": "Separa la hoja A4 de la columna hundida (oscuro). En claro: 0 24px 48px -28px rgb(11 13 16 / 0.35), 0 1px 3px rgb(11 13 16 / 0.12)." },
+      { "name": "float-notice", "value": "0 12px 32px -12px rgb(0 0 0 / 0.6)", "purpose": "Aviso flotante." },
+      { "name": "float-menu", "value": "0 16px 40px -12px rgb(0 0 0 / 0.6)", "purpose": "Panel del menú Más." },
+      { "name": "float-dialog", "value": "0 24px 64px -16px rgb(0 0 0 / 0.7)", "purpose": "Diálogo de confirmación." }
+    ],
+    "motion": [
+      { "name": "rise", "value": "0.5s cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Único momento animado: entrada del título del paso (sube 0.35em, desenfoque 4px)." },
+      { "name": "color-transition", "value": "0.2s", "purpose": "Cambios de borde, color y fondo en botones y campos." },
+      { "name": "editing-frame", "value": "outline-color 0.3s", "purpose": "Marco rubí sobre la hoja al cambiar de sección." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón sólido",
+      "kind": "button",
+      "refersTo": "button-bracket-solid",
+      "description": "Acción principal de cada zona: Guardar como PDF, Siguiente, confirmar.",
+      "html": "<button class=\"ds-bracket ds-bracket-solid\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/><polyline points=\"7 10 12 15 17 10\"/><line x1=\"12\" x2=\"12\" y1=\"15\" y2=\"3\"/></svg>Guardar como PDF</button>",
+      "css": ".ds-bracket { display: inline-flex; min-height: 2.75rem; align-items: center; justify-content: center; gap: 0.6em; font-family: 'Geist Mono Variable', ui-monospace, monospace; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; padding: 0.5em 1.1em; border: 1px solid var(--line-strong, rgb(242 243 245 / 0.2)); border-radius: 0; color: var(--fg, #f2f3f5); background: transparent; cursor: pointer; transition: border-color 0.2s, color 0.2s, background-color 0.2s; } .ds-bracket-solid { background: var(--fg, #f2f3f5); color: var(--bg, #080a0d); border-color: var(--fg, #f2f3f5); } .ds-bracket-solid:hover, .ds-bracket-solid:focus-visible { background: var(--accent, #e0506a); border-color: var(--accent, #e0506a); color: var(--bg, #080a0d); } .ds-bracket-solid:focus-visible { outline: 2px solid var(--accent, #e0506a); outline-offset: 3px; }"
+    },
+    {
+      "name": "Botón de borde",
+      "kind": "button",
+      "refersTo": "button-bracket",
+      "description": "Acción por defecto: Anterior, Cancelar, Elegir PDF, Más.",
+      "html": "<button class=\"ds-bracket\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m12 19-7-7 7-7\"/><path d=\"M19 12H5\"/></svg>Anterior</button>",
+      "css": ".ds-bracket { display: inline-flex; min-height: 2.75rem; align-items: center; justify-content: center; gap: 0.6em; font-family: 'Geist Mono Variable', ui-monospace, monospace; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; padding: 0.5em 1.1em; border: 1px solid var(--line-strong, rgb(242 243 245 / 0.2)); border-radius: 0; color: var(--fg, #f2f3f5); background: transparent; cursor: pointer; transition: border-color 0.2s, color 0.2s, background-color 0.2s; } .ds-bracket:hover, .ds-bracket:focus-visible { border-color: var(--accent, #e0506a); color: var(--accent-ink, #ff8196); background: var(--accent-soft, rgb(224 80 106 / 0.12)); } .ds-bracket:focus-visible { outline: 2px solid var(--accent, #e0506a); outline-offset: 3px; } .ds-bracket:disabled { cursor: not-allowed; opacity: 0.45; border-color: var(--line-strong, rgb(242 243 245 / 0.2)); background: transparent; color: var(--fg, #f2f3f5); }"
+    },
+    {
+      "name": "Botón quieto",
+      "kind": "button",
+      "refersTo": "button-bracket",
+      "description": "Acción secundaria en línea, sin borde en reposo: Mejorar con IA, Quitar, Traducir.",
+      "html": "<button class=\"ds-bracket ds-bracket-quiet\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M18 6 6 18\"/><path d=\"m6 6 12 12\"/></svg>Quitar</button>",
+      "css": ".ds-bracket { display: inline-flex; min-height: 2.25rem; align-items: center; justify-content: center; gap: 0.6em; font-family: 'Geist Mono Variable', ui-monospace, monospace; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; padding: 0.5em 0.75rem; border: 1px solid var(--line-strong, rgb(242 243 245 / 0.2)); border-radius: 0; color: var(--fg, #f2f3f5); background: transparent; cursor: pointer; transition: border-color 0.2s, color 0.2s, background-color 0.2s; } .ds-bracket-quiet { border-color: transparent; } .ds-bracket:hover, .ds-bracket:focus-visible { border-color: var(--accent, #e0506a); color: var(--accent-ink, #ff8196); background: var(--accent-soft, rgb(224 80 106 / 0.12)); } .ds-bracket:focus-visible { outline: 2px solid var(--accent, #e0506a); outline-offset: 3px; }"
+    },
+    {
+      "name": "Campo",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Etiqueta Title encima, campo recto sobre superficie elevada, foco en rubí.",
+      "html": "<div class=\"ds-field-wrap\"><label class=\"ds-label\" for=\"ds-f\">Puesto</label><input id=\"ds-f\" class=\"ds-field\" placeholder=\"Supervisora de operación\"></div>",
+      "css": ".ds-field-wrap { display: grid; gap: 0.375rem; font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif; } .ds-label { font-size: 0.875rem; font-weight: 500; color: var(--fg, #f2f3f5); } .ds-field { width: 100%; min-height: 2.75rem; padding: 0.6rem 0.75rem; background: var(--bg-raised, #0d1015); border: 1px solid var(--line-strong, rgb(242 243 245 / 0.2)); border-radius: 0; color: var(--fg, #f2f3f5); font: inherit; font-size: 1rem; line-height: 1.5; caret-color: var(--accent, #e0506a); transition: border-color 0.2s; } .ds-field::placeholder { color: var(--fg-muted, #8b929d); opacity: 0.8; } .ds-field:hover { border-color: var(--fg-muted, #8b929d); } .ds-field:focus-visible { outline: none; border-color: var(--accent, #e0506a); box-shadow: 0 0 0 1px var(--accent, #e0506a); }"
+    },
+    {
+      "name": "Fila de pasos",
+      "kind": "nav",
+      "refersTo": "step-tab",
+      "description": "Navegación de 8 pasos: número meta, check o alerta; subrayado rubí en el actual.",
+      "html": "<nav class=\"ds-steps\" aria-label=\"Pasos del CV\"><ol><li><button><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"/></svg>Datos</button></li><li><button aria-current=\"step\"><span class=\"ds-num\">2</span>Resumen</button></li><li><button><span class=\"ds-num\">3</span>Experiencia</button></li></ol></nav>",
+      "css": ".ds-steps { border-top: 1px solid var(--line, rgb(242 243 245 / 0.09)); border-bottom: 1px solid var(--line, rgb(242 243 245 / 0.09)); } .ds-steps ol { display: flex; margin: 0; padding: 0 0.5rem; list-style: none; overflow-x: auto; } .ds-steps button { position: relative; display: flex; min-height: 3rem; align-items: center; gap: 0.5rem; padding: 0 0.75rem; background: none; border: 0; font-family: 'Geist Variable', ui-sans-serif, sans-serif; font-size: 0.875rem; color: var(--fg-muted, #8b929d); cursor: pointer; transition: color 0.2s; } .ds-steps button:hover, .ds-steps button[aria-current] { color: var(--fg, #f2f3f5); } .ds-steps button:focus-visible { outline: 2px solid var(--accent, #e0506a); outline-offset: 3px; } .ds-steps button[aria-current]::after { content: ''; position: absolute; left: 0.75rem; right: 0.75rem; bottom: 0; height: 2px; background: var(--accent, #e0506a); } .ds-num { width: 1rem; text-align: center; font-family: 'Geist Mono Variable', ui-monospace, monospace; font-size: 0.6875rem; letter-spacing: 0.06em; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Selector de idioma",
+      "kind": "chip",
+      "refersTo": "toggle-active",
+      "description": "Dos botones de borde pegados (ES / EN); el activo en velo rubí.",
+      "html": "<fieldset class=\"ds-lang\"><legend class=\"ds-sr\">Idioma del CV</legend><label><input type=\"radio\" name=\"ds-lang\" checked>ES</label><label><input type=\"radio\" name=\"ds-lang\">EN</label></fieldset>",
+      "css": ".ds-lang { display: flex; border: 0; margin: 0; padding: 0; } .ds-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } .ds-lang label { display: inline-flex; min-height: 2.75rem; align-items: center; padding: 0 0.75rem; font-family: 'Geist Mono Variable', ui-monospace, monospace; font-size: 0.75rem; letter-spacing: 0.08em; border: 1px solid var(--line-strong, rgb(242 243 245 / 0.2)); color: var(--fg, #f2f3f5); cursor: pointer; transition: border-color 0.2s, color 0.2s, background-color 0.2s; } .ds-lang label + label { margin-left: -1px; } .ds-lang input { position: absolute; opacity: 0; } .ds-lang label:hover { border-color: var(--accent, #e0506a); color: var(--accent-ink, #ff8196); } .ds-lang label:has(:checked) { position: relative; border-color: var(--accent, #e0506a); background: var(--accent-soft, rgb(224 80 106 / 0.12)); color: var(--accent-ink, #ff8196); } .ds-lang label:has(:focus-visible) { outline: 2px solid var(--accent, #e0506a); outline-offset: 3px; }"
+    },
+    {
+      "name": "Título de paso",
+      "kind": "custom",
+      "refersTo": "display",
+      "description": "Archivo condensada en mayúsculas sobre la retícula blueprint; entra con rise.",
+      "html": "<div class=\"ds-blueprint\"><h1 class=\"ds-display\">Experiencia</h1><p class=\"ds-hint\">Del puesto más reciente al más antiguo.</p><p class=\"ds-meta\">Se guarda solo en este navegador</p></div>",
+      "css": ".ds-blueprint { padding: 2rem 1rem; background-color: var(--bg, #080a0d); background-image: linear-gradient(var(--grid-line, rgb(242 243 245 / 0.035)) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line, rgb(242 243 245 / 0.035)) 1px, transparent 1px); background-size: 2rem 2rem; color: var(--fg, #f2f3f5); } .ds-display { margin: 0; font-family: 'Archivo Variable', ui-sans-serif, sans-serif; font-stretch: 72%; font-weight: 800; font-size: 3.75rem; line-height: 0.86; letter-spacing: -0.02em; text-transform: uppercase; animation: ds-rise 0.5s cubic-bezier(0.16, 1, 0.3, 1); } .ds-hint { margin: 1rem 0 0; max-width: 65ch; font-family: 'Geist Variable', ui-sans-serif, sans-serif; color: var(--fg-muted, #8b929d); } .ds-meta { margin: 0.75rem 0 0; font-family: 'Geist Mono Variable', ui-monospace, monospace; font-size: 0.6875rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg-muted, #8b929d); } @keyframes ds-rise { from { opacity: 0; transform: translateY(0.35em); filter: blur(4px); } } @media (prefers-reduced-motion: reduce) { .ds-display { animation: none; } }"
+    },
+    {
+      "name": "Marco [ EDITANDO ]",
+      "kind": "custom",
+      "refersTo": "accent",
+      "description": "Gesto propio: la sección de la hoja que se está llenando se enmarca en rubí.",
+      "html": "<div class=\"ds-sheet\"><section class=\"ds-editing\"><h2>Experiencia</h2><p>Supervisora de operación · 2020 — Presente</p></section></div>",
+      "css": ".ds-sheet { padding: 2rem 1.5rem; background: #fff; color: #111827; font-family: ui-sans-serif, system-ui, sans-serif; box-shadow: 0 24px 48px -24px rgb(0 0 0 / 0.8), 0 2px 6px rgb(0 0 0 / 0.4); } .ds-editing { position: relative; padding: 0.5rem; outline: 2px solid var(--accent, #e0506a); outline-offset: 6px; transition: outline-color 0.3s; } .ds-editing h2 { margin: 0 0 0.25rem; font-size: 1rem; } .ds-editing p { margin: 0; font-size: 0.8125rem; } .ds-editing::before { content: '[ EDITANDO ]'; position: absolute; right: -6px; top: -6px; transform: translateY(-100%); padding: 2px 6px; background: var(--accent, #e0506a); color: #fff; font: 600 11px/1.3 'Geist Mono Variable', ui-monospace, monospace; letter-spacing: 0.08em; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El cuaderno de ingeniería con la hoja encima",
+    "overview": "CVpro vive en el mundo Sackito, el mismo de sackito.online: un cuaderno de ingeniería digital. En oscuro, fondo casi negro con una retícula técnica apenas visible; en claro, papel cálido. Sobre ese plano todo es recto y lineal: bordes de 1px, cero radios y un solo acento rubí que marca dónde estás. La única superficie clara en modo oscuro es la hoja A4 blanca, y por eso manda la vista.\n\nLa densidad es de herramienta, no de folleto. Títulos de paso enormes en Archivo condensada y mayúsculas, lectura en Geist, y todo dato de máquina (paso, estado, guardado, etiquetas de botón) en Geist Mono en mayúsculas espaciadas. El gesto propio del sistema es el marco rubí «[ EDITANDO ]» que señala sobre la hoja la sección que se está llenando.\n\nEl tema sigue `prefers-color-scheme`; no hay selector manual. Se rechaza el asistente genérico de tarjetas blancas redondeadas con barra de progreso azul.",
+    "keyCharacteristics": [
+      "Un solo acento (rubí) para estado actual, foco, error y hover; nada más lleva color.",
+      "Esquinas rectas en todo el cromo de la app.",
+      "Profundidad por tono (canvas, raised, sunken) y líneas, no por sombras; la sombra es de la hoja y de lo que flota.",
+      "Mono en mayúsculas para datos y botones; Archivo condensada solo para títulos.",
+      "La hoja es otro mundo: papel blanco con la tipografía de su plantilla."
+    ],
+    "rules": [
+      { "name": "The One Ruby Rule", "body": "El rubí es el único color de la app. Marca lo actual, lo enfocado o lo que falla; nunca decora.", "section": "colors" },
+      { "name": "The Tinta-para-texto Rule", "body": "Si el rubí es texto o icono, usa accent-ink, no accent. accent queda para bordes, rellenos y subrayados.", "section": "colors" },
+      { "name": "The Mono-es-dato Rule", "body": "Geist Mono solo lleva datos de estado y acciones. Nunca va en párrafos ni en títulos.", "section": "typography" },
+      { "name": "The Display-es-paso Rule", "body": "Archivo condensada aparece solo en la marca, el título del paso y el título del diálogo.", "section": "typography" },
+      { "name": "The Plano-por-defecto Rule", "body": "Botones, campos y entradas no llevan sombra. La sombra es para el papel y para lo que tapa la pantalla.", "section": "elevation" },
+      { "name": "The Sin-radios Rule", "body": "Ningún elemento del cromo de la app se redondea. La regla no alcanza la hoja: las plantillas tienen su propia forma.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do usar `bracket` / `bracket-solid` / `bracket-quiet` para toda acción, con 44px mínimos de alto.",
+      "Do usar accent-ink para el rubí como texto o icono, y accent para bordes, subrayados y rellenos.",
+      "Do poner en `.meta` los datos de estado (paso, guardado, número de entrada) y nada más.",
+      "Do mantener la profundidad por tono: sunken detrás de la hoja, raised para campos y flotantes.",
+      "Do dividir entre `--sheet-zoom` cualquier marca que la app dibuje sobre la hoja.",
+      "Do ocultar en `@media print` todo lo que no sea `#cv-preview`."
+    ],
+    "donts": [
+      "Don't redondear nada del cromo de la app (radio 0px).",
+      "Don't introducir un segundo color de acento ni degradados de color.",
+      "Don't aplicar los tokens de la app a las plantillas de la hoja, ni las de la hoja a la app.",
+      "Don't añadir sombras a botones, campos o entradas.",
+      "Don't animar nada más que la entrada del título del paso."
+    ]
+  }
+}
